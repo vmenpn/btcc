@@ -4,6 +4,11 @@
       "description": "BOT CMD PREFIX Example !start /start .start",
       "value": "/!."
     },
+     "SK": {
+      "description": "SK live",
+      "value": "",
+      "required": true
+    },
     "TOKEN": {
       "description": "Your bot token, as a string.",
       "value": "",
