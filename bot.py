@@ -339,7 +339,7 @@ async def ch(message: types.Message):
             "origin": "https://js.stripe.com",
             "referer": "https://js.stripe.com/",
             "accept-language": "en-US,en;q=0.9",
-             "Authorization: "Bearer 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"" 
+            "authorization: "Bearer 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"" 
 
         }
 
@@ -379,7 +379,7 @@ async def ch(message: types.Message):
         head = {
             "accept": "*/*",
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-             "Authorization: "Bearer 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"",
+            "authorization: "Bearer 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"",
             "user-agent": UA,
             "accept-language": "en-US,en;q=0.9"
         }
