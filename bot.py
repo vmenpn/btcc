@@ -39,8 +39,8 @@ BOT_ID = bot_info.id
 
 # USE YOUR ROTATING PROXY API IN DICT FORMAT http://user:pass@providerhost:port
 proxies = {
-           'http': 'http://qnuomzzl-rotate:4i44gnayqk7c@p.webshare.io:80/',
-           'https': 'http://qnuomzzl-rotate:4i44gnayqk7c@p.webshare.io:80/'
+           'Socks5': 'ca-tor2-smart.serverlocation.co:1080:SDPvWUVBymcWQzC:Il0veUbabe<3'
+           
 }
 
 session = requests.Session()
