@@ -70,7 +70,7 @@ async def helpstr(message: types.Message):
     MSG = f'''
 Hello {FIRST}, Im {BOT_NAME}
 U can find my Boss  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds \n/ck Charge 0.8$ \n/bin \n/cv Check Auth'''
+Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -237,7 +237,7 @@ async def ch(message: types.Message):
         if 'success' in ri.text:
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
-<b>STATUS</b>➟ #ApprovedCVV
+<b>STATUS</b>➟ #ApprovedCVV 14.95$
 <b>MSG</b>➟ {ri.text}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
