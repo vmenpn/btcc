@@ -133,7 +133,7 @@ async def ch(message: types.Message):
     ID = message.from_user.id
     FIRST = message.from_user.first_name
     try:
-        await dp.throttle('chk', rate=ANTISPAM)
+        await dp.throttle('ck', rate=ANTISPAM)
     except Throttled:
         await message.reply('<b>Too many requests!</b>\n'
                             f'Blocked For {ANTISPAM} seconds')
@@ -144,7 +144,7 @@ async def ch(message: types.Message):
             cc = message.text[len('/ck '):]
 
         if len(cc) == 0:
-            return await message.reply("<b>No Card to chk</b>")
+            return await message.reply("<b>No Card to ck</b>")
 
         x = re.findall(r'\d+', cc)
         ccn = x[0]
@@ -240,7 +240,7 @@ async def ch(message: types.Message):
 <b>MSG</b>➟ {ri.text}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
-<b>CHKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>OWNER</b>: {await is_owner(ID)}
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -251,7 +251,7 @@ async def ch(message: types.Message):
 <b>MSG</b>➟ {ri.text}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
-<b>CHKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>OWNER</b>: {await is_owner(ID)}
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -262,7 +262,7 @@ async def ch(message: types.Message):
 <b>MSG</b>➟ {ri.text}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
-<b>CHKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>OWNER</b>: {await is_owner(ID)}
 <b>BOT</b>: @{BOT_USERNAME}''')
 
