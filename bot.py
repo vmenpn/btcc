@@ -364,7 +364,7 @@ async def ch(message: types.Message):
             "user-agent": UA,
             "accept-language": "en-US,en;q=0.9"
         }
-        if 'Request rate limit exceeded.' in ri.text:
+        if 'Request rate limit exceeded.' in rx.text:
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
@@ -375,7 +375,7 @@ async def ch(message: types.Message):
 <b>OWNER</b>: {await is_owner(ID)}
 <b>BOT</b>: @{BOT_USERNAME}''')
 
-        if 'API Key provided' in ri.text:
+        if 'API Key provided' in rx.text:
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
