@@ -69,7 +69,7 @@ async def helpstr(message: types.Message):
     MSG = f'''
 Hello {FIRST}, Im {BOT_NAME}
 U can find my Boss  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds /chk /info /bin'''
+Cmds /ck /info /bin'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -126,7 +126,7 @@ OWNER⇢ <a href="tg://user?id={OWNER}">LINK</a>
     await message.reply(INFO)
 
 
-@dp.message_handler(commands=['chk'], commands_prefix=PREFIX)
+@dp.message_handler(commands=['ck'], commands_prefix=PREFIX)
 async def ch(message: types.Message):
     await message.answer_chat_action('typing')
     tic = time.perf_counter()
@@ -141,7 +141,7 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/chk '):]
+            cc = message.text[len('/ck '):]
 
         if len(cc) == 0:
             return await message.reply("<b>No Card to chk</b>")
