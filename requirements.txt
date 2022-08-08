@@ -1,3 +1,7 @@
 aiogram
 requests
 PyYAML
+bs4 
+lxml
+telegram 
+telegram.ext 
