@@ -312,6 +312,11 @@ async def ch(message: types.Message):
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
+        headers = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
 
         b = session.get('https://ip.seeip.org/').text
 
