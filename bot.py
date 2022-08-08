@@ -271,7 +271,7 @@ async def ch(message: types.Message):
         if 'declined' in ri.text:
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
-<b>STATUS</b>➟ Declined
+<b>STATUS</b>➟ Declined 4.99$
 <b>MSG</b>➟ {ri.text}
 
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
