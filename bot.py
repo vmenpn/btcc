@@ -350,8 +350,21 @@ async def ch(message: types.Message):
                           data=load, headers=header)
         token = rx.json()['id']
         LastF = f'************{ccn[-4:]}'
+        
+          payload = {
+            "amount": "80",
+            "currency": "USD",            
+            "source": token           
+        }
 
-        if 'Request rate limit exceeded.' in ri.text:
+        head = {
+            "accept": "*/*",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "authorization": "Bearer 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",
+            "user-agent": UA,
+            "accept-language": "en-US,en;q=0.9"
+        }
+         if 'Request rate limit exceeded.' in ri.text:
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
@@ -373,19 +386,6 @@ async def ch(message: types.Message):
 <b>OWNER</b>: {await is_owner(ID)}
 <b>BOT</b>: @{BOT_USERNAME}''')
         else:
-          payload = {
-            "amount": "80",
-            "currency": "USD",            
-            "source": token           
-        }
-
-        head = {
-            "accept": "*/*",
-            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-            "authorization": "Bearer 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",
-            "user-agent": UA,
-            "accept-language": "en-US,en;q=0.9"
-        }
 
         ri = session.post('https://api.stripe.com/v1/charges', data=payload,
                           headers=head)
