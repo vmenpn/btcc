@@ -323,6 +323,9 @@ async def ch(message: types.Message):
 
         # hmm
         load = {
+            "guid": Guid,
+            "muid": Muid,
+            "sid": Sid,
             "card[number]": ccn,
             "card[exp_month]": mm,
             "card[exp_year]": yy,
