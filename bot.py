@@ -16,6 +16,7 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 # Configure vars get from env or config.yml
 CONFIG = yaml.load(open('config.yml', 'r'), Loader=yaml.SafeLoader)
 SK = os.getenv('SK', CONFIG['sk'])
+SK1 = os.getenv('SK1', CONFIG['sk1'])
 TOKEN = os.getenv('TOKEN', CONFIG['token'])
 BLACKLISTED = os.getenv('BLACKLISTED', CONFIG['blacklisted']).split()
 PREFIX = os.getenv('PREFIX', CONFIG['prefix'])
@@ -70,7 +71,7 @@ async def helpstr(message: types.Message):
     MSG = f'''
 Hello {FIRST}, Im {BOT_NAME}
 U can find my Boss  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$'''
+Cmds \n/ck Charge 0.8$ \n/bin \n/cv Check Auth'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -202,6 +203,11 @@ async def ch(message: types.Message):
         rx = session.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
         token = rx.json()['id']
+        res = rx.json()
+        card = res['card']
+        country = card['country']
+        brand = card['brand']
+        funding = card['funding']
         LastF = f'************{ccn[-4:]}'
 
         payload = {
@@ -237,12 +243,15 @@ async def ch(message: types.Message):
         if 'success' in ri.text:
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
-<b>STATUS</b>➟ #ApprovedCVV 14.95$
+<b>STATUS</b>➟ #ApprovedCVV
 <b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
-
 <b>BOT</b>: @{BOT_USERNAME}''')
 
         if 'incorrect_cvc' in ri.text:
@@ -250,10 +259,13 @@ async def ch(message: types.Message):
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCCN
 <b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
-
 <b>BOT</b>: @{BOT_USERNAME}''')
 
         if 'declined' in ri.text:
@@ -261,20 +273,26 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
-
 <b>BOT</b>: @{BOT_USERNAME}''')
 
         await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ DEAD
 <b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
 <b>PROXY-IP</b> <code>{b}</code>
 <b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
-
 <b>BOT</b>: @{BOT_USERNAME}''')
 
 @dp.message_handler(commands=['ck'], commands_prefix=PREFIX)
