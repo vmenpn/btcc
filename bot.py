@@ -347,7 +347,7 @@ async def ch(message: types.Message):
         }
 
         rx = session.post('https://api.stripe.com/v1/tokens',
-                          data=ploadne, headers=header)
+                          data=load, headers=header)
         token = rx.json()['id']
         LastF = f'************{ccn[-4:]}'
 
