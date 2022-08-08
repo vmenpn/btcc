@@ -7,12 +7,6 @@ import random
 import yaml
 import asyncio
 import re
-import base64
-from bs4 import BeautifulSoup
-from lxml import html
-from lxml import etree 
-from telegram import Update
-from telegram.ext import Updater, CommandHandler, CallbackContext
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
