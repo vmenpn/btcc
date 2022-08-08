@@ -371,7 +371,7 @@ async def ch(message: types.Message):
 <b>BOT</b>: @{BOT_USERNAME}''')
         else:
         payload = {
-            "amount": 80",
+            "amount": "80",
             "currency": "USD",            
             "source": token           
         }
