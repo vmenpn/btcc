@@ -312,7 +312,17 @@ async def ch(message: types.Message):
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
-       ploadne = {
+
+        b = session.get('https://ip.seeip.org/').text
+
+        s = session.post('https://m.stripe.com/6', headers=headers)
+        r = s.json()
+        Guid = r['guid']
+        Muid = r['muid']
+        Sid = r['sid']
+
+        # hmm
+        load = {
             "card[number]": ccn,
             "card[exp_month]": mm,
             "card[exp_year]": yy,
