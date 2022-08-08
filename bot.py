@@ -38,10 +38,8 @@ BOT_NAME = bot_info.first_name
 BOT_ID = bot_info.id
 
 # USE YOUR ROTATING PROXY API IN DICT FORMAT http://user:pass@providerhost:port
-proxies = {
-           'Socks5': 'ca-tor2-smart.serverlocation.co:1080:SDPvWUVBymcWQzC:Il0veUbabe<3'
-           
-}
+proxies = ca-tor2-smart.serverlocation.co:1080:SDPvWUVBymcWQzC:Il0veUbabe<3
+
 
 session = requests.Session()
 
