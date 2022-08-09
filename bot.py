@@ -109,7 +109,7 @@ async def binio(message: types.Message):
     await message.answer_chat_action('typing')
     ID = message.from_user.id
     FIRST = message.from_user.first_name
-    BIN = message.text[len('/bin '):]
+    BIN = message.text[len('/bin'+BOT_USERNAME):]
     if len(BIN) < 6:
         return await message.reply(
                    'Send bin not ass'
@@ -154,7 +154,7 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/cv '):]
+            cc = message.text[len('/cv@'+BOT_USERNAME):]
 
         if len(cc) == 0:
             return await message.reply("<b>No Card to cv</b>")
@@ -346,7 +346,7 @@ async def ch(message: types.Message):
       if message.reply_to_message:
             cc = message.reply_to_message.text
       else:
-            cc = message.text[len('/ck '):]
+            cc = message.text[len('/ck'+BOT_USERNAME):]
 
       if len(cc) == 0:
             return await message.reply("<b>No Card to ck</b>")
@@ -625,7 +625,7 @@ async def ch(message: types.Message):
   ID = message.from_user.id
   FIRST = message.from_user.first_name
   try:
-        await dp.throttle('ck', rate=ANTISPAM)
+        await dp.throttle('au', rate=ANTISPAM)
   except Throttled:
         await message.reply('<b>Too many requests!</b>\n'
                             f'Blocked For {ANTISPAM} seconds')
@@ -633,7 +633,7 @@ async def ch(message: types.Message):
       if message.reply_to_message:
             cc = message.reply_to_message.text
       else:
-            cc = message.text[len('/ck '):]
+            cc = message.text[len('/au'+BOT_USERNAME):]
 
       if len(cc) == 0:
             return await message.reply("<b>No Card to ck</b>")
@@ -913,7 +913,7 @@ async def ch(message: types.Message):
     ID = message.from_user.id
     FIRST = message.from_user.first_name
     try:
-        await dp.throttle('cv', rate=ANTISPAM)
+        await dp.throttle('vbv', rate=ANTISPAM)
     except Throttled:
         await message.reply('<b>Too many requests!</b>\n'
                             f'Blocked For {ANTISPAM} seconds')
@@ -921,7 +921,7 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/cv '):]
+            cc = message.text[len('/vbv@'+BOT_USERNAME):]
 
         if len(cc) == 0:
             return await message.reply("<b>No Card to cv</b>")
@@ -1251,7 +1251,7 @@ async def ch(message: types.Message):
     ID = message.from_user.id
     FIRST = message.from_user.first_name
     try:
-        await dp.throttle('cv', rate=ANTISPAM)
+        await dp.throttle('c2d', rate=ANTISPAM)
     except Throttled:
         await message.reply('<b>Too many requests!</b>\n'
                             f'Blocked For {ANTISPAM} seconds')
@@ -1259,10 +1259,10 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/cv '):]
+            cc = message.text[len('/c2d@'+BOT_USERNAME):]
 
         if len(cc) == 0:
-            return await message.reply("<b>No Card to cv</b>")
+            return await message.reply("<b>No Card </b>")
 
         x = re.findall(r'\d+', cc)
         ccn = x[0]
