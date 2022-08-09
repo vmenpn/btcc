@@ -12,7 +12,6 @@ import json
 
 
 
-
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -109,7 +108,7 @@ async def binio(message: types.Message):
     await message.answer_chat_action('typing')
     ID = message.from_user.id
     FIRST = message.from_user.first_name
-    BIN = message.text[len('/bin'+BOT_USERNAME):]
+    BIN = message.text[len('/bin'):]
     if len(BIN) < 6:
         return await message.reply(
                    'Send bin not ass'
@@ -154,7 +153,7 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/cv@'+BOT_USERNAME):]
+            cc = message.text[len('/cv@'):]
 
         if len(cc) == 0:
             return await message.reply("<b>No Card to cv</b>")
@@ -214,6 +213,7 @@ async def ch(message: types.Message):
         rx = session.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
         res = rx.json()
+        print("check by "+FIRST)
         if 'invalid_' in rx.text:
           msg = res['error']['message']
           return await message.reply(f'''
@@ -346,7 +346,7 @@ async def ch(message: types.Message):
       if message.reply_to_message:
             cc = message.reply_to_message.text
       else:
-            cc = message.text[len('/ck'+BOT_USERNAME):]
+            cc = message.text[len('/ck'):]
 
       if len(cc) == 0:
             return await message.reply("<b>No Card to ck</b>")
@@ -633,7 +633,7 @@ async def ch(message: types.Message):
       if message.reply_to_message:
             cc = message.reply_to_message.text
       else:
-            cc = message.text[len('/au'+BOT_USERNAME):]
+            cc = message.text[len('/au'):]
 
       if len(cc) == 0:
             return await message.reply("<b>No Card to ck</b>")
@@ -921,7 +921,8 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/vbv@'+BOT_USERNAME):]
+            cc = message.text[len('/vbv@'):]
+           
 
         if len(cc) == 0:
             return await message.reply("<b>No Card to cv</b>")
@@ -1259,7 +1260,7 @@ async def ch(message: types.Message):
         if message.reply_to_message:
             cc = message.reply_to_message.text
         else:
-            cc = message.text[len('/c2d@'+BOT_USERNAME):]
+            cc = message.text[len('/c2d@'):]
 
         if len(cc) == 0:
             return await message.reply("<b>No Card </b>")
@@ -1339,7 +1340,7 @@ async def ch(message: types.Message):
         rx = session.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
         res = rx.json() 
-        
+        print("check by "+FIRST)
         toc22 = time.perf_counter()
         toc2 = toc22 - tic
        
@@ -1445,7 +1446,7 @@ async def ch(message: types.Message):
           ri = requests.post('https://api.render.com/graphql', json=payload,
                           headers=head)
           res1 = ri.json() 
-          print("check by "+FIRST)
+         
 
           toc33 = time.perf_counter()
           toc3 = toc33 - tic
