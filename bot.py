@@ -132,7 +132,7 @@ SENDER: <a href="tg://user?id={ID}">{FIRST}</a>
 BOT⇢ @{BOT_USERNAME}
 OWNER⇢ <a href="tg://user?id={OWNER}">LINK</a>
 '''
-     await message.reply(INFO)
+    await message.reply(INFO)
     
          
 @dp.message_handler(commands=['cv'], commands_prefix=PREFIX)
