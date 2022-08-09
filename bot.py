@@ -236,7 +236,7 @@ async def ch(message: types.Message):
 <b>PROXY-IP</b> <code>{b}</code>
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
-        if 'tok' in res:
+        else:
          token = rx.json()['id']
          res = rx.json()
          card = res['card']
@@ -1451,10 +1451,11 @@ async def ch(message: types.Message):
           toc3 = toc33 - tic
           toc = toc1 + toc2 + toc3
           if ',"billingStatus":"ACTIVE' in ri.text:
+            msgg = res1['data']['updateCard']['billingStatus']
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCVV
-<b>MSG</b>➟ {ri.text}
+<b>MSG</b>➟ {msgg}
 ================================================================
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
