@@ -67,12 +67,10 @@ async def is_owner(user_id):
 async def helpstr(message: types.Message):
     # await message.answer_chat_action('typing')
     keyboard_markup = types.InlineKeyboardMarkup(row_width=3)
-    btns = types.InlineKeyboardButton("Bot Source", url="https://viet69.vc/")
-    keyboard_markup.row(btns)
     FIRST = message.from_user.first_name
     MSG = f'''
-Hello {FIRST}, I'm bot
-BOSS:  <a href="tg://user?id={OWNER}">HERE</a>
+Hello {FIRST}, Bot như cc
+Owner:  <a href="tg://user?id={OWNER}">HERE</a>
 Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$\n/vbv check vbv\n/c2d site 2ds'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
