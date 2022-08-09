@@ -116,7 +116,7 @@ async def binio(message: types.Message):
                f'http://binchk-api.vercel.app/bin={BIN}'
     ).json()        
     print("check by "+FIRST) 
-        INFO = f'''
+    INFO = f'''
 BIN⇢ <code>{BIN}</code>
 Brand⇢ <u>{r["brand"]}</u>
 Type⇢ <u>{r["type"]}</u>
