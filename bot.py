@@ -24,7 +24,6 @@ TOKEN = os.getenv('TOKEN', CONFIG['token'])
 BLACKLISTED = os.getenv('BLACKLISTED', CONFIG['blacklisted']).split()
 PREFIX = os.getenv('PREFIX', CONFIG['prefix'])
 OWNER = int(os.getenv('OWNER', CONFIG['owner']))
-CHAT_ID_FORWARD = int(os.getenv('CHAT_ID_FORWARD', CONFIG['chat_id1']))
 ANTISPAM = int(os.getenv('ANTISPAM', CONFIG['antispam']))
 MODE = 'prod'
 
