@@ -1600,6 +1600,12 @@ async def sk(message: types.Message):
             msg = res['error']['message']
             return await message.reply(f'''
 ❌<b>SK Dead</b>➟ <code>{skl}</code>''')
+        
+      if 'testmode_charges_only' in rx.text:
+            res = rx.json()
+            msg = res['error']['message']
+            return await message.reply(f'''
+❌<b>SK Dead</b>➟ <code>{skl}</code>''')  
     
 
   
