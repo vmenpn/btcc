@@ -1,8 +1,9 @@
 {
   "env": {
-    "PREFIX": {
-      "description": "BOT CMD PREFIX Example !start /start .start",
-      "value": "/!."
+    "fsmail": {
+      "description": "mail",
+      "value": "",
+      "required": true
     },
      "SK": {
       "description": "SK live",
@@ -14,19 +15,10 @@
       "value": "",
       "required": true
     },
-    "OWNER": {
-      "description": "Owner user_id.",
+    
+    "fspass": {
+      "description": "mail",
       "value": "",
-      "required": true
-    },
-    "ANTISPAM": {
-      "description": "Antispam bot limit bot sleep for how many time in cmd spam",
-      "value": "",
-      "required": true
-    },
-    "BLACKLISTED": {
-      "description": "type your url where hosted api.php",
-      "value": "559558 510805 434256 524499",
       "required": true
     }
   },
